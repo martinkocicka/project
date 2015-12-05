@@ -222,11 +222,7 @@ namespace rift {
         TEST("a = \"aba\" a[c(0,2)]", "aa");
         TEST("a = c(1,2,3) a[c(0,1)] = 56 a", 56, 56, 3);
 
-        // project2();
-        // project3();
-        // project4();
-        // project5();
-        // project6();
+        project2();
     }
 
 } // namespace rift
