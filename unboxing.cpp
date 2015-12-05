@@ -158,6 +158,25 @@ bool Unboxing::genericAdd() {
     }
 }
 
+bool Unboxing::genericDot() {
+    AType * lhs = state().get(ins->getOperand(0));
+    AType * rhs = state().get(ins->getOperand(1));
+    if (!lhs->isDouble() || !rhs->isDouble())
+        return false;
+    AType * result_t;
+    if (lhs->isScalar() and rhs->isScalar()) {
+        result_t = updateAnalysis(
+                BinaryOperator::Create(Instruction::FMul, getScalarPayload(lhs), getScalarPayload(rhs), "", ins),
+                new AType(AType::Kind::D));
+    } else {
+        result_t = updateAnalysis(
+                RUNTIME_CALL(m->doubleDot, getVectorPayload(lhs), getVectorPayload(rhs)),
+                new AType(AType::Kind::D));
+    }
+    ins->replaceAllUsesWith(box(result_t));
+    return true;
+}
+
 bool Unboxing::genericArithmetic(llvm::Instruction::BinaryOps op, llvm::Function * fop) {
     AType * lhs = state().get(ins->getOperand(0));
     AType * rhs = state().get(ins->getOperand(1));
@@ -337,6 +356,8 @@ bool Unboxing::runOnFunction(llvm::Function & f) {
                     erase = genericArithmetic(Instruction::FMul, m->doubleMul);
                 } else if (s == "genericDiv") {
                     erase = genericArithmetic(Instruction::FDiv, m->doubleDiv);
+                } else if (s == "genericDot") {
+                    erase = genericDot();
                 } else if (s == "genericLt") {
                     erase = genericRelational(FCmpInst::FCMP_OLT, m->doubleLt);
                 } else if (s == "genericGt") {
