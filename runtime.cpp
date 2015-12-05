@@ -534,7 +534,9 @@ double doubleDot(DoubleVector * lhs, DoubleVector * rhs) {
 }
 
 RVal * genericDot(RVal * lhs, RVal * rhs) {
-    assert(false and "Fill me in");
+    if (lhs->type != RVal::Type::Double || rhs->type != RVal::Type::Double)
+        throw "Both operands of dot product have to be double vectors";
+    return new RVal(new DoubleVector(doubleDot(lhs->d, rhs->d)));
 }
 
 
