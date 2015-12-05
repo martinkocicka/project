@@ -526,7 +526,11 @@ RVal * c(int size, ...) {
 }
 
 double doubleDot(DoubleVector * lhs, DoubleVector * rhs) {
-    assert(false and "Fill me in");
+    int vectorSize = max(lhs->size, rhs->size);
+    double result = 0;
+    for (int i = 0; i < vectorSize; ++i)
+        result += lhs->data[i % lhs->size] * rhs->data[i % rhs->size];
+    return result;
 }
 
 RVal * genericDot(RVal * lhs, RVal * rhs) {
