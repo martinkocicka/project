@@ -378,6 +378,9 @@ public:
             case ast::BinExp::Type::div:
                 result = RUNTIME_CALL(genericDiv, lhs, rhs);
                 return;
+            case ast::BinExp::Type::dot:
+                result = RUNTIME_CALL(genericDot, lhs, rhs);
+                return;
             case ast::BinExp::Type::eq:
                 result = RUNTIME_CALL(genericEq, lhs, rhs);
                 return;
