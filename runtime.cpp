@@ -526,10 +526,24 @@ RVal * c(int size, ...) {
 }
 
 double doubleDot(DoubleVector * lhs, DoubleVector * rhs) {
-    int vectorSize = max(lhs->size, rhs->size);
     double result = 0;
-    for (int i = 0; i < vectorSize; ++i)
-        result += lhs->data[i % lhs->size] * rhs->data[i % rhs->size];
+    int vectorSize = max(lhs->size, rhs->size);
+    if (lhs->size == 1 || rhs->size == 1) {
+        double scalar;
+        double *doubleVector;
+        if (lhs->size == 1) {
+            scalar = lhs->data[0];
+            doubleVector = rhs->data;
+        } else {
+            scalar = rhs->data[0];
+            doubleVector = lhs->data;
+        }
+        for (int i = 0; i < vectorSize; ++i)
+            result += scalar * doubleVector[i % vectorSize];
+    } else {
+        for (int i = 0; i < vectorSize; ++i)
+            result += lhs->data[i % lhs->size] * rhs->data[i % rhs->size];
+    }
     return result;
 }
 
