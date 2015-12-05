@@ -22,6 +22,10 @@ void TypeAnalysis::genericArithmetic(CallInst * ci) {
     state.update(ci, lhs->merge(rhs));
 }
 
+void TypeAnalysis::genericDot(CallInst * ci) {
+    state.update(ci, new AType(AType::Kind::R, AType::Kind::DV, AType::Kind::D));
+}
+
 void TypeAnalysis::genericRelational(CallInst * ci) {
     AType * lhs = state.get(ci->getOperand(0));
     AType * rhs = state.get(ci->getOperand(1));
@@ -100,6 +104,8 @@ bool TypeAnalysis::runOnFunction(llvm::Function & f) {
                         genericArithmetic(ci);
                     } else if (s == "genericDiv") {
                         genericArithmetic(ci);
+                    } else if (s == "genericDot") {
+                        genericDot(ci);
                     } else if (s == "genericEq") {
                         genericRelational(ci);
                     } else if (s == "genericNeq") {
